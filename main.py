@@ -87,10 +87,26 @@ def main(page: ft.Page):
         elif index == 2: show_form()
         elif index == 3: show_motion()
         else:
-            content.controls = [ft.Text(PAGE_NAMES[index], size=22, weight=ft.FontWeight.BOLD),
-                                ft.Text(f"Navigation workload screen {index + 1} / 20."),
-                                ft.OutlinedButton("Back home", on_click=lambda _: show_home())]
-            page.update()
+            show_screens()
+
+    def show_screens():
+        content.controls = [
+            ft.Text("Navigation screens", size=22, weight=ft.FontWeight.BOLD),
+            *[ft.ListTile(title=ft.Text(name), subtitle=ft.Text(f"Navigation workload · {i + 1} / 20"),
+                          on_click=lambda _, i=i: show_screen(i))
+              for i, name in enumerate(PAGE_NAMES)],
+        ]
+        page.update()
+
+    def show_screen(index):
+        status.value = f"{PAGE_NAMES[index]} opened"
+        content.controls = [
+            ft.Text(PAGE_NAMES[index], size=22, weight=ft.FontWeight.BOLD),
+            ft.Text(f"Navigation workload screen {index + 1} / 20."),
+            ft.OutlinedButton("Back to screens", on_click=lambda _: show_screens()),
+            ft.OutlinedButton("Back home", on_click=lambda _: show_home()),
+        ]
+        page.update()
 
     rail = ft.NavigationRail(
         selected_index=0,
